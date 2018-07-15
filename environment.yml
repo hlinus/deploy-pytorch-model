@@ -1,0 +1,9 @@
+name: pt
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  - pytorch-cpu=0.4.0
+  - flask=1.0.2
+  - pillow=5.1.0
+  - torchvision-cpu=0.2.1

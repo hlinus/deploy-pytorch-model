@@ -1,25 +1,21 @@
 # encoding: utf-8
 """
-@author: xyliao
-@contact: xyliao1993@qq.com
+original version from https://zhuanlan.zhihu.com/a/35879835
+slightly modified to work with pytorch 0.4 and docker
 """
 
 import io
-import json
-
 import flask
-import torch
 import torch
 import torch.nn.functional as F
 from PIL import Image
-from torch import nn
 from torchvision import transforms as T
 from torchvision.models import resnet50
 
 # Initialize our Flask application and the PyTorch model.
 app = flask.Flask(__name__)
 model = None
-use_gpu = True
+use_gpu = False
 
 with open('imagenet_class.txt', 'r') as f:
     idx2label = eval(f.read())
@@ -84,7 +80,7 @@ def predict():
             data['predictions'] = list()
 
             # Loop over the results and add them to the list of returned predictions
-            for prob, label in zip(results[0][0], results[1][0]):
+            for prob, label in zip(results[0][0].cpu().numpy(), results[1][0].cpu().numpy()):
                 label_name = idx2label[label]
                 r = {"label": label_name, "probability": float(prob)}
                 data['predictions'].append(r)
@@ -100,4 +96,4 @@ if __name__ == '__main__':
     print("Loading PyTorch model and Flask starting server ...")
     print("Please wait until server has fully started")
     load_model()
-    app.run()
+    app.run(host='0.0.0.0')
