@@ -7,10 +7,8 @@ EXPOSE 5000
 
 RUN mkdir /app
 WORKDIR /app
-
-COPY environment.yml /app/environment.yml
-RUN ["conda", "env", "create" ]
-
 COPY . /app
+
+RUN ["conda", "env", "create" ]
 
 CMD ["source activate pt && exec python run_pytorch_server.py" ]

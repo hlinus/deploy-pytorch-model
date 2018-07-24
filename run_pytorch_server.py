@@ -76,11 +76,11 @@ def predict():
             # Classify the input image and then initialize the list of predictions to return to the client.
             preds = F.softmax(model(image), dim=1)
             results = torch.topk(preds.cpu().data, k=3, dim=1)
-
+            results = (results[0].cpu().numpy(), results[1].cpu().numpy())
             data['predictions'] = list()
 
             # Loop over the results and add them to the list of returned predictions
-            for prob, label in zip(results[0][0].cpu().numpy(), results[1][0].cpu().numpy()):
+            for prob, label in zip(results[0][0], results[1][0]):
                 label_name = idx2label[label]
                 r = {"label": label_name, "probability": float(prob)}
                 data['predictions'].append(r)
